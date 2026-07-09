@@ -1,0 +1,6 @@
+org_size,n_orgs,authored_prs,self_served_pct_of_authored,self_served_pct_of_reviewed
+1,88,11708,0.1,0.1
+2-4,40,7252,3.1,3.8
+5-9,9,3188,13.0,15.1
+10-19,5,11438,11.7,16.1
+20+,3,13049,45.2,55.6

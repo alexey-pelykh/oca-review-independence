@@ -1,0 +1,12 @@
+# The collection + analysis pipeline (scripts/) uses the Python standard
+# library ONLY — there are no third-party dependencies to install.
+#
+# The single external requirement is the GitHub CLI, used for all data
+# collection:
+#
+#   gh   — https://cli.github.com/  (authenticate once with `gh auth login`)
+#
+# Python 3.9 or newer is required.
+#
+# The methodology PDF in dataset/ was rendered with pandoc + weasyprint;
+# that toolchain is NOT needed to run the analysis or regenerate the CSVs.

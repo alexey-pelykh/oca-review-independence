@@ -1,0 +1,113 @@
+# OCA Review Independence
+
+**A reproducible measurement of who approves the code that gets merged into the [Odoo Community Association](https://odoo-community.org/).**
+
+For every pull request merged into OCA, one question: was it approved by an independent reviewer from a *different* company, by a colleague at the author's *own* company, or by *nobody* at all? And does that pattern change with the size of the company contributing?
+
+This repository holds the full pipeline — collection scripts, company-attribution logic, the analysis, and the aggregate dataset — so anyone can rebuild every figure from public GitHub data and check the math.
+
+It measures **review provenance**, not review *quality*. It says who signed off, never whether the change was good, self-interested, or agenda-driven. See [What this cannot say](#what-this-cannot-say).
+
+---
+
+## What the data shows
+
+All figures are over PRs merged **2017 or later** (the GitHub Reviews API did not exist before then — see [METHODOLOGY.md §2](METHODOLOGY.md)). Population: **68,214** merged PRs across all 261 OCA repositories; **61,337** merged 2017+; **48,647** (79.3%) with a resolvable author company.
+
+**1. Sign-off is a social convention, not a mechanical gate.** `/ocabot merge` checks exactly two things: green CI, and that the triggering user has push access or is a declared maintainer of the touched modules. No approval count. No author-≠-merger check. A contributor with push access can merge their own PR with zero external approvals, and the tooling permits it. *(Sourced to OCA's own bot code — [METHODOLOGY.md §6](METHODOLOGY.md).)*
+
+**2. Self-review scales with company size.** The share of a company's own PRs approved only by its own people, by company headcount:
+
+| Company size (distinct contributors) | Self-served share of *reviewed* PRs |
+|---|---|
+| 1 person | 0.1% |
+| 2–4 | 3.8% |
+| 5–9 | 15.1% |
+| 10–19 | 16.1% |
+| **20+** | **55.6%** |
+
+A one-person company *cannot* self-serve — it has no colleague to approve. The largest firms review their own work internally more than half the time. *(`dataset/oca-selfserve-by-orgsize.csv`)*
+
+**3. Contribution and review are highly concentrated.** Across 634 contributing companies, the top 5 account for 48% of all authorship (Gini 0.91); across 496 reviewing companies, the top 5 cast 51% of all approvals (Gini 0.93). Six companies produce half of everything merged. *(`dataset/oca-concentration.csv`)*
+
+**4. Independent review has eroded over time.** The share of merged PRs with an approver from an outside company fell from **67.5% in 2017** to **40.8% in 2023**, recovering only partially to ~46% by 2026. *(`dataset/oca-review-by-year.csv`)*
+
+**5. Most self-review is legitimate maintenance — not turf capture.** OCA grants module maintainers merge rights over their own modules, so a company approving its own PR on a module *it maintains* is expected and legitimate. Controlling for declared maintainership at module granularity, only **~14%** of no-independent-review PRs touch another company's turf; ~37% are the author's own maintained modules and ~50% touch modules with no declared maintainer at all. Once maintainership is credited, **no single company stands out as an outlier**. *(See [METHODOLOGY.md §5](METHODOLOGY.md); verified at merge-time in §8.)*
+
+### The one-line version
+
+Independent review holds for most of OCA, but it erodes at scale: the largest firms increasingly review their own work internally, and the tooling permits it. Whether that is a *problem* is a governance question. This data measures the mechanism — not the motive.
+
+---
+
+## What this cannot say
+
+- **Nothing about the content or intent of any change.** "Self-served review" describes who approved, not whether the change was good or self-interested. Provenance ≠ motive.
+- **Nothing about individuals.** Every published figure is a company-level aggregate. No per-person data is released.
+- **21% of PRs are unattributed** (author company could not be resolved) and are excluded from company rates. A login that cannot be resolved is *never* counted as sharing an author's company — so every self-serve figure is a **lower bound**.
+- **Correlation, not causation**, on the size gradient. Large companies *can* self-review because they have colleagues; this does not establish that they do so to avoid scrutiny.
+
+Full caveats: [METHODOLOGY.md §9](METHODOLOGY.md).
+
+---
+
+## The dataset
+
+Four aggregate CSVs in [`dataset/`](dataset/), all company-level (no personal data):
+
+| File | What it holds |
+|---|---|
+| `oca-review-by-org.csv` | Per company (≥30 authored PRs, 109 companies): contributors, authored PRs, and the % breakdown across no-review / self-served / externally-reviewed, plus the module-controlled other-org-turf count. |
+| `oca-review-by-year.csv` | Per year: merged PRs and the % self-served / externally-reviewed / <2-approvals / zero-review. The erosion trend. |
+| `oca-selfserve-by-orgsize.csv` | Per company-size bucket: the self-serve rate. The size gradient. |
+| `oca-concentration.csv` | Authorship vs approving-reviews: top-1 / top-5 share, companies-for-50%, Gini coefficient. |
+
+Plus [`dataset/OCA-Review-Methodology.pdf`](dataset/OCA-Review-Methodology.pdf) — the full methodology as a standalone document.
+
+---
+
+## Reproduce it
+
+Everything derives from public GitHub data via the official `gh` CLI. No private data, no scraping behind auth.
+
+### Prerequisites
+
+- [`gh`](https://cli.github.com/) authenticated (`gh auth login`)
+- Python 3.9+ (standard library only — no third-party packages needed for the pipeline)
+
+### Run order
+
+```bash
+python3 scripts/1_collect_prs.py         # → data/{repo}.json     (every merged PR + its reviews)
+python3 scripts/2_attribute_companies.py # → identity-company.json (login → company, by triangulation)
+python3 scripts/3_collect_files.py       # → files-cache.json      (changed paths for no-ext-review PRs)
+python3 scripts/4_collect_maintainers.py # → module_maintainers.json (each module's declared maintainers)
+python3 scripts/5_analyze.py             # prints the headline classification
+python3 scripts/6_make_dataset.py        # → dataset/*.csv         (the four aggregate CSVs)
+python3 scripts/7_verify_merge_time.py   # merge-time verification of the maintainership control
+```
+
+Steps 1, 3, and 4 hit the GitHub API across 261 repositories and take hours; all three are **resumable** (re-run to continue from cache). Steps 5 and 6 are local and take seconds. `6_make_dataset.py` regenerates the exact CSVs committed here.
+
+The raw per-PR data (`data/`) and the intermediate caches are **not** committed — they contain per-login information, and the scripts regenerate them from scratch. See [`.gitignore`](.gitignore).
+
+---
+
+## Companion article
+
+A written walkthrough of these findings — what they mean for OCA governance and how the analysis survived its own corrections — accompanies this repository. *(Link added on publication.)*
+
+---
+
+## Honesty about corrections
+
+The first-pass numbers were wrong in four ways, each caught and fixed before publication — a pre-2017 data artifact, an approve-then-comment miscount, a login-vs-company maintainership bug, and a current-snapshot maintainer question resolved by merge-time verification. They are documented in [METHODOLOGY.md §7](METHODOLOGY.md), because a methodology that hides its own error history is not one you should trust.
+
+---
+
+## License
+
+- **Code** (everything in `scripts/`): [MIT](LICENSE).
+- **Data** (`dataset/*.csv`, `dataset/*.pdf`) and **`METHODOLOGY.md`**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — use it, cite it as *"Alexey Pelykh, OCA Review Independence (2026)."*
+
+All underlying data is public and belongs to its respective GitHub authors and the OCA.

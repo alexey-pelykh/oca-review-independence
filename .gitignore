@@ -1,0 +1,21 @@
+# Raw per-PR data and intermediate caches — NOT committed.
+# These contain per-login information; the pipeline regenerates them from
+# public GitHub data. Aggregate, company-level outputs live in dataset/.
+data/
+identity-company.json
+files-cache.json
+module_maintainers.json
+merge-time-sample.json
+
+# Logs from long-running collection steps
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store

@@ -1,0 +1,5 @@
+# Keep line endings deterministic so the committed CSVs stay byte-identical to
+# what scripts/6_make_dataset.py regenerates — the reproducibility guarantee.
+*.csv text eol=lf
+*.py  text eol=lf
+*.md  text eol=lf
