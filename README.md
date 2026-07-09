@@ -1,12 +1,12 @@
 # OCA Review Independence
 
-**A reproducible measurement of who approves the code that gets merged into the [Odoo Community Association](https://odoo-community.org/).**
+**How communal is review in the [Odoo Community Association](https://odoo-community.org/), really? A reproducible measurement.**
 
-For every pull request merged into OCA, one question: was it approved by an independent reviewer from a *different* company, by a colleague at the author's *own* company, or by *nobody* at all? And does that pattern change with the size of the company contributing?
+I contribute to OCA myself, so I wanted a number instead of a hunch: when a change gets merged, who approved it? An independent reviewer from a *different* company, a colleague at the author's *own* company, or *nobody* at all? And does that shift with the size of the company contributing?
 
-This repository holds the full pipeline — collection scripts, company-attribution logic, the analysis, and the aggregate dataset — so anyone can rebuild every figure from public GitHub data and check the math.
+This repository is that measurement with its work shown — the full collection, company-attribution, and analysis pipeline plus the aggregate dataset, so anyone can rebuild every figure from public GitHub data and check the math.
 
-It measures **review provenance**, not review *quality*. It says who signed off, never whether the change was good, self-interested, or agenda-driven. See [What this cannot say](#what-this-cannot-say).
+It measures review **provenance**, not **quality**: who signed off, never whether the change was good, self-interested, or agenda-driven. Mechanism, not motive. See [What this cannot say](#what-this-cannot-say).
 
 ---
 
@@ -14,7 +14,7 @@ It measures **review provenance**, not review *quality*. It says who signed off,
 
 All figures are over PRs merged **2017 or later** (the GitHub Reviews API did not exist before then — see [METHODOLOGY.md §2](METHODOLOGY.md)). Population: **68,214** merged PRs across all 261 OCA repositories; **61,337** merged 2017+; **48,647** (79.3%) with a resolvable author company.
 
-**1. Sign-off is a social convention, not a mechanical gate.** `/ocabot merge` checks exactly two things: green CI, and that the triggering user has push access or is a declared maintainer of the touched modules. No approval count. No author-≠-merger check. A contributor with push access can merge their own PR with zero external approvals, and the tooling permits it. *(Sourced to OCA's own bot code — [METHODOLOGY.md §6](METHODOLOGY.md).)*
+**1. Sign-off is a social convention, not a mechanical gate.** `/ocabot merge` checks exactly two things: green CI, and that the triggering user has push access or is a declared maintainer of the touched modules. No approval count. No author-≠-merger check. A contributor with push access, or who maintains the touched module, can merge their own PR with zero external approvals, and the tooling permits it. *(Sourced to OCA's own bot code — [METHODOLOGY.md §6](METHODOLOGY.md).)*
 
 **2. Self-review scales with company size.** The share of a company's own PRs approved only by its own people, by company headcount:
 
@@ -30,13 +30,13 @@ A one-person company *cannot* self-serve — it has no colleague to approve. The
 
 **3. Contribution and review are highly concentrated.** Across 634 contributing companies, the top 5 account for 48% of all authorship (Gini 0.91); across 496 reviewing companies, the top 5 cast 51% of all approvals (Gini 0.93). Six companies produce half of everything merged. *(`dataset/oca-concentration.csv`)*
 
-**4. Independent review has eroded over time.** The share of merged PRs with an approver from an outside company fell from **67.5% in 2017** to **40.8% in 2023**, recovering only partially to ~46% by 2026. *(`dataset/oca-review-by-year.csv`)*
+**4. Independent review eroded, then partly recovered.** The share of merged PRs with an approver from an outside company slid from **67.5% in 2017** to a trough of **40.8% in 2023**, then climbed back to **47.8% in 2025** — still well below its 2017 level. (2026 is a partial year, excluded from the trend.) *(`dataset/oca-review-by-year.csv`)*
 
 **5. Most self-review is legitimate maintenance — not turf capture.** OCA grants module maintainers merge rights over their own modules, so a company approving its own PR on a module *it maintains* is expected and legitimate. Controlling for declared maintainership at module granularity, only **~14%** of no-independent-review PRs touch another company's turf; ~37% are the author's own maintained modules and ~50% touch modules with no declared maintainer at all. Once maintainership is credited, **no single company stands out as an outlier**. *(See [METHODOLOGY.md §5](METHODOLOGY.md); verified at merge-time in §8.)*
 
 ### The one-line version
 
-Independent review holds for most of OCA, but it erodes at scale: the largest firms increasingly review their own work internally, and the tooling permits it. Whether that is a *problem* is a governance question. This data measures the mechanism — not the motive.
+Independent review holds for most of OCA, but it thins out at scale: the largest firms review far more of their own work internally, and the tooling permits it. Whether that is a *problem* is a governance question for OCA. This data measures the mechanism, not the motive.
 
 ---
 
