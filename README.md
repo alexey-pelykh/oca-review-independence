@@ -95,7 +95,7 @@ The raw per-PR data (`data/`) and the intermediate caches are **not** committed 
 
 ## Companion article
 
-A written walkthrough of these findings — what they mean for OCA governance and how the analysis survived its own corrections — accompanies this repository. *(Link added on publication.)*
+**[How Communal Is OCA Review, Really?](https://alexey-pelykh.com/blog/oca-review-independence/)** — a written walkthrough of these findings: what they mean for OCA governance, and how the analysis survived its own corrections.
 
 ---
 
