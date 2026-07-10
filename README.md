@@ -30,17 +30,19 @@ A one-person company *cannot* self-serve — it has no colleague to approve. The
 
 **3. A handful of companies hold the keys.** Across 634 contributing companies, five wrote almost half of everything merged:
 
-| Company | Merged PRs |
-|---|---|
-| Tecnativa | 10,148 |
-| ForgeFlow | 4,646 |
-| Akretion | 4,006 |
-| Camptocamp | 2,308 |
-| Acsone | 2,306 |
+| Company | Merged PRs | Self-review rate | On others' turf |
+|---|---|---|---|
+| Tecnativa | 10,148 | 66.7% | 5.8% |
+| ForgeFlow | 4,646 | 28.3% | 2.2% |
+| Akretion | 4,006 | 8.4% | 0.8% |
+| Camptocamp | 2,308 | 11.5% | 3.3% |
+| Acsone | 2,306 | 8.3% | 1.9% |
+
+*Self-review rate = share of the company's reviewed PRs approved only by its own people. On others' turf = share of its own PRs merged with no outside review onto a module another company maintains.*
 
 The top 5 account for **48%** of all authorship (Gini 0.91); across 496 reviewing companies, the top 5 cast **51%** of all approvals (Gini 0.93). Six companies produce half of everything merged. Tecnativa alone authored over 10,000 — more than double the next contributor — and self-reviews 66.7% of its *reviewed* PRs, but just 5.8% of its merges land on modules another company maintains: self-review at scale, overwhelmingly its own code. Attribution is by GitHub org name, so a few firms contributing under more than one appear split, and these per-name totals run conservative. *(`dataset/oca-review-by-org.csv`, `dataset/oca-concentration.csv`)*
 
-**4. Independent review eroded, then partly recovered.** The share of merged PRs with an approver from an outside company slid from **67.5% in 2017** to a trough of **40.8% in 2023**, then climbed back to **47.8% in 2025** — still well below its 2017 level. (2026 is a partial year, excluded from the trend.) *(`dataset/oca-review-by-year.csv`)*
+**4. Independent review used to be the norm. Now it's a coin flip.** The share of merged PRs with an approver from an outside company slid from **67.5% in 2017** to a trough of **40.8% in 2023**, then recovered to **47.8% in 2025** — still well below the clear majority it once was. (2026 is a partial year, excluded from the trend.) *(`dataset/oca-review-by-year.csv`)*
 
 **5. Most self-review is legitimate maintenance — not turf capture.** OCA grants module maintainers merge rights over their own modules, so a company approving its own PR on a module *it maintains* is expected and legitimate. Controlling for declared maintainership at module granularity, only **~14%** of no-independent-review PRs touch another company's turf; ~37% are the author's own maintained modules and ~50% touch modules with no declared maintainer at all. Once maintainership is credited, **no single company stands out as an outlier**. *(See [METHODOLOGY.md §5](METHODOLOGY.md); verified at merge-time in §8.)*
 
