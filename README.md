@@ -28,7 +28,17 @@ All figures are over PRs merged **2017 or later** (the GitHub Reviews API did no
 
 A one-person company *cannot* self-serve — it has no colleague to approve. The largest firms review their own work internally more than half the time. *(`dataset/oca-selfserve-by-orgsize.csv`)*
 
-**3. Contribution and review are highly concentrated.** Across 634 contributing companies, the top 5 account for 48% of all authorship (Gini 0.91); across 496 reviewing companies, the top 5 cast 51% of all approvals (Gini 0.93). Six companies produce half of everything merged. *(`dataset/oca-concentration.csv`)*
+**3. A handful of companies hold the keys.** Across 634 contributing companies, five wrote almost half of everything merged:
+
+| Company | Merged PRs |
+|---|---|
+| Tecnativa | 10,148 |
+| ForgeFlow | 4,646 |
+| Akretion | 4,006 |
+| Camptocamp | 2,308 |
+| Acsone | 2,306 |
+
+The top 5 account for **48%** of all authorship (Gini 0.91); across 496 reviewing companies, the top 5 cast **51%** of all approvals (Gini 0.93). Six companies produce half of everything merged. Tecnativa alone authored over 10,000 — more than double the next contributor — and self-reviews 66.7% of its *reviewed* PRs, but just 5.8% of its merges land on modules another company maintains: self-review at scale, overwhelmingly its own code. Attribution is by GitHub org name, so a few firms contributing under more than one appear split, and these per-name totals run conservative. *(`dataset/oca-review-by-org.csv`, `dataset/oca-concentration.csv`)*
 
 **4. Independent review eroded, then partly recovered.** The share of merged PRs with an approver from an outside company slid from **67.5% in 2017** to a trough of **40.8% in 2023**, then climbed back to **47.8% in 2025** — still well below its 2017 level. (2026 is a partial year, excluded from the trend.) *(`dataset/oca-review-by-year.csv`)*
 
